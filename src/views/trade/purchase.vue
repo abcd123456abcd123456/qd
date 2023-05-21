@@ -427,7 +427,7 @@ export default {
       core
         .fetch({
           method: "get",
-          url: "http://www.baidu.com",
+          url: "#",
           data: {
             userId: id,
           }

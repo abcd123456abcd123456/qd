@@ -18,6 +18,11 @@ module.exports = {
         "/api": {
             target: "http://127.0.0.1:2022",
             changeOrigin: true,
+        },
+        "/purchase": {
+            target: "http://127.0.0.1:8081",
+            changeOrigin: true,
+            "^/purchase": ""
         }
     },
     // 设置静态资源文件打包时的相对路径
