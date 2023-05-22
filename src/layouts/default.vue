@@ -49,7 +49,7 @@
                 <h-icon name="android-person"></h-icon>
                 账户管理
               </template>
-              <h-menu-item name="/account">
+              <h-menu-item name="/account/account">
                 开户
               </h-menu-item>
               <h-menu-item name="/account/information">

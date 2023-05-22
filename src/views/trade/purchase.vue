@@ -329,7 +329,6 @@
 <script>
 import html2canvas from 'html2canvas';
 import core from "@hsui/core";
-import data from '../trade/purchase.js'
 export default {
   data () {
     const format = _ => {

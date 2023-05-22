@@ -25,18 +25,13 @@ export default initRouter(
         },
         {
           name: 'product-index',
-          path: 'list',
+          path: 'product',
           component: ProductIndex,
         },
         {
           name: 'account-account',
           path: 'account/account',
           component: AccountAccount,
-        },
-        {
-          name: 'account-information',
-          path: 'account/information',
-          component: AccountInformation,
         },
         {
           name: 'product-id',
@@ -69,52 +64,47 @@ export default initRouter(
   { base: '/', mode: 'hash' }
 )
 
-function Index () {
+function Index() {
   return import(/* webpackChunkName: "index" */ '@/views/index.vue')
 }
-function AccountIndex () {
+function AccountIndex() {
   return import(
     /* webpackChunkName: "account-index" */ '@/views/account/index.vue'
   )
 }
-function LiquidationIndex () {
+function LiquidationIndex() {
   return import(
     /* webpackChunkName: "liquidation-index" */ '@/views/liquidation/index.vue'
   )
 }
-function ProductIndex () {
+function ProductIndex() {
   return import(
     /* webpackChunkName: "product-index" */ '@/views/product/index.vue'
   )
 }
-function AccountAccount () {
+function AccountAccount() {
   return import(
     /* webpackChunkName: "account-account" */ '@/views/account/account.vue'
   )
 }
-function AccountInformation () {
-  return import(
-    /* webpackChunkName: "account-information" */ '@/views/account/information.vue'
-  )
-}
-function ProductId () {
+function ProductId() {
   return import(/* webpackChunkName: "product-id" */ '@/views/product/id.vue')
 }
-function TradeBusiness () {
+function TradeBusiness() {
   return import(
     /* webpackChunkName: "trade-business" */ '@/views/trade/business.vue'
   )
 }
-function TradePurchase () {
+function TradePurchase() {
   return import(
     /* webpackChunkName: "trade-purchase" */ '@/views/trade/purchase.vue'
   )
 }
-function TradeRedeem () {
+function TradeRedeem() {
   return import(
     /* webpackChunkName: "trade-redeem" */ '@/views/trade/redeem.vue'
   )
 }
-function __404__ () {
+function __404__() {
   return import(/* webpackChunkName: "__404__" */ '@/views/__404__.vue')
 }
