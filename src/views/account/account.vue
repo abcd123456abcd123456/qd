@@ -204,6 +204,7 @@
   </div>
 </template>
 <script>
+import core from '@hsui/core'
 export default {
   data () {
     return {
