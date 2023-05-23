@@ -33,13 +33,10 @@
         :rules="productRuleValidate"
         :label-width="80"
       >
-        <h-form-item label="产品名称" prop="productName" required>
-          <h-input
-            v-model="productFormData.productName"
-            placeholder="请输入产品名称"
-          />
+        <h-form-item label="名称" prop="productName" required>
+          <h-input v-model="productFormData.productName" placeholder="请输入" />
         </h-form-item>
-        <h-form-item label="产品类型" prop="productType" required cols="2">
+        <h-form-item label="类型" prop="productType" required cols="2">
           <h-radio-group v-model="productFormData.productType">
             <h-radio
               v-for="(productType, key) in productTypeOrm"
@@ -51,7 +48,10 @@
             </h-radio>
           </h-radio-group>
         </h-form-item>
-        <h-form-item label="产品状态" prop="productStatus" required cols="2">
+        <h-form-item label="风险等级" prop="level" required>
+          <h-input v-model="productFormData.level" placeholder="请输入" />
+        </h-form-item>
+        <h-form-item label="状态" prop="productStatus" required cols="2">
           <h-radio-group v-model="productFormData.productStatus">
             <h-radio
               v-for="(productStatus, key) in productStatusOrm"
@@ -63,11 +63,11 @@
             </h-radio>
           </h-radio-group>
         </h-form-item>
-        <h-form-item label="产品大类" prop="productCategory">
-          <h-input
-            v-model="productFormData.productCategory"
-            placeholder="请输入产品大类"
-          />
+        <h-form-item label="开放" prop="deal" required>
+          <h-input v-model="productFormData.deal" placeholder="请输入" />
+        </h-form-item>
+        <h-form-item label="公司" prop="firm" required>
+          <h-input v-model="productFormData.firm" placeholder="请输入" />
         </h-form-item>
         <h-form-item style="text-align: right">
           <h-button type="ghost" @click="productFormCancel"> 取消 </h-button>
@@ -124,32 +124,40 @@ export default {
           type: "index",
         },
         {
-          title: "产品代码",
+          title: "编号",
           key: "id",
           render: (h, { row: { id } }) => h("span", {}, id.slice(-10)),
         },
         {
-          title: "产品名称",
+          title: "名称",
           key: "productName",
         },
         {
-          title: "产品类型",
+          title: "类型",
           key: "productType",
           render: (h, { row: { productType } }) => {
             return h("span", {}, this.productTypeOrm[productType]);
           },
         },
         {
-          title: "产品状态",
+          title: "风险等级",
+          key: "level",
+        },
+        {
+          title: "状态",
           key: "productStatus",
           render: (h, { row: { productStatus } }) => {
             return h("span", {}, this.productStatusOrm[productStatus]);
           },
         },
-        // {
-        //   title: "证件大类",
-        //   key: "productCategory",
-        // },
+        {
+          title: "开放",
+          key: "deal",
+        },
+        {
+          title: "公司",
+          key: "firm",
+        },
         {
           title: "操作",
           key: "action",
@@ -223,7 +231,7 @@ export default {
       productList: [],
       pagination: {
         current: 1,
-        "page-size": 2,
+        "page-size": 3,
         total: 0,
       },
     };
@@ -264,10 +272,10 @@ export default {
       core
         .fetch({
           method: "get",
-          url: "http://127.0.0.1:2022/api/product",
+          url: "//////////////////////////////",
           data: {
             current: 1,
-            pageSize: 2,
+            pageSize: 3,
           },
         })
         .then((res) => {

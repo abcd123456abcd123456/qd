@@ -126,8 +126,9 @@
                 <h-col span="12">
                   <h-form-item label="可用银行卡：" prop="bankCard">
                     <h-select
-                      v-model="productForm.bankCard"
+                      v-model="productForm.bankCardNumber"
                       style="width: 300px"
+                      @on-change="bankCardChange"
                     >
                       <h-option
                         v-for="option in bankCardOptions"
@@ -317,36 +318,37 @@ export default {
       expectedDate: format(),
       disabled: false,
       userOptions: [],
+      bankCards: [], //可用银行卡
       disabled: false,
       productOptions: [],
       bankCardOptions: [],
       success: false,
       userForm: {
+        accountId: 0,
         userName: "姚测1", //客户名称
         userType: "客户类型", //客户类型
         certificateType: "证件类型", //证件类型
         certificateNum: "证件号码", //证件号码
         userRiskLevel: "客户风险等级", //客户风险等级
-        bankCards: [],
       },
       productForm: {
         fundId: "", //产品代码
         productName: "产品名称", //产品名称
-        bankCard: "", //可用银行卡
-        balance: "", //可用余额
-        amount: "购买金额", //购买金额
+        bankCardNumber: "", // 银行卡号
+        balance: 0, //可用余额
+        dealAmount: "购买金额", //购买金额
         riskLevel: "", //产品风险等级
         virtualAmount: "", //虚拟账户余额
       },
       ruleValidate: {
-        bankCard: [
+        bankCardNumber: [
           { required: true, message: "请选择使用的银行卡", trigger: "change" },
         ],
         amount: [
           { required: true, message: "购买余额不能为空", trigger: "blur" },
         ],
         fundId: [
-          { required: true, message: "请选择产品代码", trigger: "change" },
+          { required: true, message: "基金ID不得为空", trigger: "change" },
         ],
       },
       ruleValidate_tab2: {
@@ -360,6 +362,9 @@ export default {
     };
   },
   methods: {
+    bankCardChange(val) {
+      this.productForm.balance = val;
+    },
     userChange(val) {
       core
         .fetch({
@@ -370,7 +375,15 @@ export default {
           },
         })
         .then((res) => {
-          this.userForm.bankCards = res.data.bankCards;
+          this.accountId = val;
+          this.bankCardOptions = res.data.bankCards.map((item) => {
+            return {
+              value: item.balanceAmount,
+              label: item.bankCardNumber,
+            };
+          });
+          this.bankCards = res.data.bankCards;
+          console.log(this.bankCardOptions);
           this.userForm.certificateNum = res.data.certificateNum;
           this.userForm.certificateType = res.data.certificateType;
           this.userForm.userName = res.data.userName;
@@ -392,10 +405,12 @@ export default {
           },
         })
         .then((res) => {
+          this.productForm.productName = res.data.fundName;
+          this.productForm.riskLevel = res.data.fundRiskLevel;
           console.log(res.data);
         })
         .catch(() => {
-          this.$hMessage.error("获取用户信息出错");
+          this.$hMessage.error("获取产品信息出错");
           this.disabled = true;
         });
     },
@@ -415,8 +430,8 @@ export default {
           console.log(res.data);
           this.userOptions = res.data.map((item) => {
             return {
-              value: item,
-              label: item,
+              value: item + "",
+              label: item + "",
             };
           });
           console.log(this.userOptions);
@@ -437,10 +452,11 @@ export default {
         .then((res) => {
           this.productOptions = res.data.map((item) => {
             return {
-              value: item,
-              label: item,
+              value: item + "",
+              label: item + "",
             };
           });
+          console.log(this.productOptions);
         })
         .catch(() => {
           this.$hMessage.error("获取产品ID出错");
@@ -451,8 +467,23 @@ export default {
         if (valid) {
           core
             .fetch({
-              url: "#",
-              data: {},
+              url: "/purchase/gettime",
+              method: "get",
+            })
+            .then((res) => {
+              this.userForm.date = res.data.tmpTime;
+            });
+          console.log(this.userForm.date);
+          core
+            .fetch({
+              url: "/purchase/subscribe/addSubscribe",
+              data: {
+                accountId: parseInt(this.userForm.accountId),
+                fundId: parseInt(this.productForm.fundId),
+                dealTime: this.userForm.date,
+                bankCardNumber: this.productForm.bankCardNumber,
+                dealAmount: this.productForm.dealAmount,
+              },
               method: "post",
             })
             .then((res) => {

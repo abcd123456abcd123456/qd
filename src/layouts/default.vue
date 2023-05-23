@@ -16,7 +16,9 @@
         理财销售柜台系统
       </div>
       <div class="date">
-        <h-icon name="time"></h-icon> {{ date }}
+        <h-icon name="time"></h-icon>
+        {{ time }}
+        {{ week }}
       </div>
     </h-menu>
     <div class="layout-content">
@@ -35,12 +37,12 @@
               <h-icon name="home"></h-icon>
               首页
             </h-menu-item>
-            <h-submenu name="product">
+            <h-submenu name="products">
               <template v-slot:title>
                 <h-icon name="order_fill"></h-icon>
                 产品管理
               </template>
-              <h-menu-item name="list">
+              <h-menu-item name="product">
                 列表
               </h-menu-item>
             </h-submenu>
@@ -91,16 +93,47 @@
 </template>
 
 <script>
+import core from '@hsui/core'
 export default {
   data () {
     return {
-      date: '2023-05-20'
+      time: '2023-05-23 10:22:11',
+      week: '星期五'
     }
   },
   methods: {
     Onselect (name) {
       this.$router.push(name)
+    },
+    getDate (val) {
+      const date = new Date(val)
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+      const day = date.getDate()
+      return `${year}-${month}-${day}`
     }
+  },
+  mounted () {
+    core
+      .fetch({
+        url: '/time/gettime',
+        method: 'get',
+      })
+      .then((res) => {
+        if (res.code != '10000') {
+          this.$hMessage.error('获取当前时间出现错误！')
+        }
+        else {
+          this.time = res.data.tmpTime
+          this.week = res.data.week
+          window.sessionStorage.setItem('time', res.data.tmpTime)
+          window.sessionStorage.setItem('date', this.getDate(res.data.tmpTime))
+        }
+      })
+      .catch(() => {
+        window.sessionStorage.setItem('time', this.time)
+        window.sessionStorage.setItem('date', this.getDate(this.time))
+      })
   }
 };
 </script>
