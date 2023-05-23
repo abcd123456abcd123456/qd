@@ -1,12 +1,18 @@
 <template>
   <div>
-    <div v-show="!success" class="body">
+    <div
+      v-show="!success"
+      class="body"
+    >
       <div class="title">产品申购</div>
       <div class="search">
         <h-form :label-width="150">
-          <h-form-item label="账号输入" class="label">
+          <h-form-item
+            label="账号输入"
+            class="label"
+          >
             <h-select
-              v-model="value"
+              v-model="userForm.accountId"
               filterable
               remote
               :remote-method="userRemote"
@@ -20,8 +26,7 @@
                 v-for="option in userOptions"
                 :value="option.value"
                 :key="option.value"
-                >{{ option.label }}</h-option
-              >
+              >{{ option.label }}</h-option>
             </h-select>
           </h-form-item>
         </h-form>
@@ -78,8 +83,12 @@
         </h-form>
       </div>
       <div class="productInfo">
-        <h-tabs value="name1">
-          <h-tab-pane label="使用银行卡" name="name1" style="height: 250px">
+        <h-tabs v-model="tabName">
+          <h-tab-pane
+            label="使用银行卡"
+            name="bankCard"
+            style="height: 250px"
+          >
             <h-form
               :model="productForm"
               label-position="left"
@@ -90,7 +99,10 @@
             >
               <h-row>
                 <h-col span="12">
-                  <h-form-item label="产品代码：" prop="fundId">
+                  <h-form-item
+                    label="产品代码："
+                    prop="fundId"
+                  >
                     <h-select
                       v-model="productForm.fundId"
                       filterable
@@ -107,8 +119,7 @@
                         v-for="option in productOptions"
                         :value="option.value"
                         :key="option.value"
-                        >{{ option.label }}</h-option
-                      >
+                      >{{ option.label }}</h-option>
                     </h-select>
                   </h-form-item>
                 </h-col>
@@ -124,7 +135,10 @@
               </h-row>
               <h-row>
                 <h-col span="12">
-                  <h-form-item label="可用银行卡：" prop="bankCard">
+                  <h-form-item
+                    label="可用银行卡："
+                    prop="bankCard"
+                  >
                     <h-select
                       v-model="productForm.bankCardNumber"
                       style="width: 300px"
@@ -134,7 +148,7 @@
                         v-for="option in bankCardOptions"
                         :key="option.value"
                         :value="option.value"
-                        >{{ option.label }}
+                      >{{ option.label }}
                       </h-option>
                     </h-select>
                   </h-form-item>
@@ -149,10 +163,15 @@
                   </h-form-item>
                 </h-col>
               </h-row>
-              <h-form-item label="购买金额" prop="amount">
+              <h-form-item
+                label="购买金额"
+                prop="dealAmount"
+                required
+              >
                 <h-input
-                  v-model="productForm.amount"
-                  placeholder="请输入"
+                  v-model="productForm.dealAmount"
+                  placeholder="请输入购买金额"
+                  @on-blur="onblur"
                 ></h-input>
               </h-form-item>
 
@@ -169,12 +188,15 @@
                   @click="handleSubmit('productForm')"
                   :disabled="disabled"
                   style="text-align: center; width: 100px"
-                  >{{ disabled ? "无法申购" : "申购" }}</h-button
-                >
+                >{{ disabled ? "无法申购" : "申购" }}</h-button>
               </h-form-item>
             </h-form>
           </h-tab-pane>
-          <h-tab-pane label="使用虚拟账户" name="name2" style="height: 250px">
+          <h-tab-pane
+            label="使用虚拟账户"
+            name="virtualAmount"
+            style="height: 250px"
+          >
             <h-form
               :model="productForm"
               label-position="left"
@@ -185,7 +207,10 @@
             >
               <h-row>
                 <h-col span="12">
-                  <h-form-item label="产品代码：" prop="fundId">
+                  <h-form-item
+                    label="产品代码："
+                    prop="fundId"
+                  >
                     <h-select
                       v-model="productForm.fundId"
                       filterable
@@ -202,8 +227,7 @@
                         v-for="option in productOptions"
                         :value="option.value"
                         :key="option.value"
-                        >{{ option.label }}</h-option
-                      >
+                      >{{ option.label }}</h-option>
                     </h-select>
                   </h-form-item>
                 </h-col>
@@ -224,10 +248,15 @@
                   placeholder="自动获取填入"
                 ></h-input>
               </h-form-item>
-              <h-form-item label="购买金额" prop="amount">
+              <h-form-item
+                label="购买金额"
+                prop="dealAmount"
+                required
+              >
                 <h-input
-                  v-model="productForm.amount"
-                  placeholder="请输入"
+                  v-model="productForm.dealAmount"
+                  placeholder="请输入购买金额"
+                  @on-blur="onblur"
                 ></h-input>
               </h-form-item>
               <h-form-item label="产品风险等级：">
@@ -243,7 +272,7 @@
                   type="primary"
                   @click="handleSubmit_tab2('productForm_tab2')"
                   style="text-align: center; width: 100px"
-                  >{{ disabled ? "无法申购" : "申购" }}
+                >{{ disabled ? "无法申购" : "申购" }}
                 </h-button>
               </h-form-item>
             </h-form>
@@ -251,11 +280,19 @@
         </h-tabs>
       </div>
     </div>
-    <div v-show="success" class="successPrompt" ref="success">
-      <img src="../../assets/成功.png" alt="" class="successPic" />
+    <div
+      v-show="success"
+      class="successPrompt"
+      ref="success"
+    >
+      <img
+        src="../../assets/成功.png"
+        alt=""
+        class="successPic"
+      />
       <div class="msg">申购成功!</div>
       <div class="promptInfo">投资人姓名：{{ userForm.userName }}</div>
-      <div class="promptInfo">交易账号：{{ value }}</div>
+      <div class="promptInfo">交易账号：{{ userForm.accountId }}</div>
       <div style="text-align: center">
         <div class="promptCell">
           产品信息
@@ -265,7 +302,7 @@
         <div class="promptCell">
           购买金额
           <br />
-          {{ productForm.amount }}
+          {{ productForm.dealAmount }}
         </div>
         <div class="promptCell">
           申请编号
@@ -279,7 +316,10 @@
       </div>
       <div style="text-align: center; margin-top: 45px">
         <div class="promptButton">
-          <h-button type="primary" @click="further">继续购买</h-button>
+          <h-button
+            type="primary"
+            @click="further"
+          >继续购买</h-button>
         </div>
         <div class="promptButton">
           <h-button @click="back">完成并返回首页</h-button>
@@ -295,30 +335,16 @@
 import html2canvas from "html2canvas";
 import core from "@hsui/core";
 export default {
-  data() {
-    const format = (_) => {
-      core
-        .fetch({
-          method: "get",
-          url: "http://timor.tech/api/holiday/info/2021-6-18",
-        })
-        .then((res) => {
-          this.expectedDate = res;
-        })
-        .catch(() => {
-          this.$hMessage.error("sad");
-        });
-    };
+  data () {
     return {
-      value: "",
       loading: false,
+      tabName: 'virtualAmount',
       applicationNumber: "0012345678971237",
       loadingText: "",
-      date: "2022-05-20",
-      expectedDate: format(),
+      date: '',
+      expectedDate: '',
       disabled: false,
       userOptions: [],
-      bankCards: [], //可用银行卡
       disabled: false,
       productOptions: [],
       bankCardOptions: [],
@@ -335,26 +361,20 @@ export default {
         fundId: "", //产品代码
         productName: "产品名称", //产品名称
         bankCardNumber: "", // 银行卡号
-        balance: 0, //可用余额
+        balance: 100, //可用余额
         dealAmount: "购买金额", //购买金额
         riskLevel: "", //产品风险等级
-        virtualAmount: "", //虚拟账户余额
+        virtualAmount: "100", //虚拟账户余额
       },
       ruleValidate: {
         bankCardNumber: [
           { required: true, message: "请选择使用的银行卡", trigger: "change" },
-        ],
-        amount: [
-          { required: true, message: "购买余额不能为空", trigger: "blur" },
         ],
         fundId: [
           { required: true, message: "基金ID不得为空", trigger: "change" },
         ],
       },
       ruleValidate_tab2: {
-        amount: [
-          { required: true, message: "购买余额不能为空", trigger: "blur" },
-        ],
         fundId: [
           { required: true, message: "请选择产品代码", trigger: "change" },
         ],
@@ -362,10 +382,22 @@ export default {
     };
   },
   methods: {
-    bankCardChange(val) {
+    onblur () {
+      if (this.tabName == 'virtualAmount') {
+        if (this.productForm.dealAmount > this.productForm.virtualAmount) {
+          this.productForm.dealAmount = this.productForm.virtualAmount;
+        }
+      }
+      else {
+        if (this.productForm.dealAmount > this.productForm.balance) {
+          this.productForm.dealAmount = this.productForm.balance;
+        }
+      }
+    },
+    bankCardChange (val) {
       this.productForm.balance = val;
     },
-    userChange(val) {
+    userChange (val) {
       core
         .fetch({
           method: "get",
@@ -375,14 +407,13 @@ export default {
           },
         })
         .then((res) => {
-          this.accountId = val;
+          this.userForm.accountId = val;
           this.bankCardOptions = res.data.bankCards.map((item) => {
             return {
               value: item.balanceAmount,
-              label: item.bankCardNumber,
+              label: `${item.bankCardNumber} | ${item.bankName}`,
             };
           });
-          this.bankCards = res.data.bankCards;
           console.log(this.bankCardOptions);
           this.userForm.certificateNum = res.data.certificateNum;
           this.userForm.certificateType = res.data.certificateType;
@@ -395,7 +426,7 @@ export default {
           this.disabled = true;
         });
     },
-    productChange(val) {
+    productChange (val) {
       core
         .fetch({
           method: "get",
@@ -407,17 +438,16 @@ export default {
         .then((res) => {
           this.productForm.productName = res.data.fundName;
           this.productForm.riskLevel = res.data.fundRiskLevel;
-          console.log(res.data);
         })
         .catch(() => {
           this.$hMessage.error("获取产品信息出错");
           this.disabled = true;
         });
     },
-    onkeydown() {
+    onkeydown () {
       this.$hMessage.info("选中账号自动填入");
     },
-    userRemote(id) {
+    userRemote (id) {
       core
         .fetch({
           method: "get",
@@ -434,13 +464,12 @@ export default {
               label: item + "",
             };
           });
-          console.log(this.userOptions);
         })
         .catch(() => {
           this.$hMessage.error("获取用户ID出错");
         });
     },
-    productRemote(id) {
+    productRemote (id) {
       core
         .fetch({
           method: "get",
@@ -462,32 +491,47 @@ export default {
           this.$hMessage.error("获取产品ID出错");
         });
     },
-    handleSubmit(name) {
+    handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          core
-            .fetch({
-              url: "/purchase/gettime",
-              method: "get",
-            })
-            .then((res) => {
-              this.userForm.date = res.data.tmpTime;
-            });
-          console.log(this.userForm.date);
+          this.date = window.sessionStorage.getItem('date')
           core
             .fetch({
               url: "/purchase/subscribe/addSubscribe",
               data: {
                 accountId: parseInt(this.userForm.accountId),
                 fundId: parseInt(this.productForm.fundId),
-                dealTime: this.userForm.date,
+                dealTime: this.date,
                 bankCardNumber: this.productForm.bankCardNumber,
                 dealAmount: this.productForm.dealAmount,
+                solveStatus: 0,
               },
               method: "post",
             })
             .then((res) => {
-              this.success = true;
+              const time = window.sessionStorage.getItem('time');
+              if (res.code == '10000') {
+                core
+                  .fetch({
+                    url: '/time/nexttime',
+                    data: {
+                      from: time
+                    },
+                    method: 'get'
+                  })
+                  .then((res) => {
+                    if (res.code == '10000') {
+                      this.applicationNumber = res.data
+                      this.expectedDate = res.data;
+                      this.success = true;
+                    } else {
+                      this.$hMessage.error(res.msg)
+                    }
+                  })
+              }
+              else {
+                this.$hMessage.error(res.msg)
+              }
             })
             .catch(() => {
               this.$hMessage.error("申购出现错误");
@@ -498,17 +542,46 @@ export default {
         }
       });
     },
-    handleSubmit_tab2(name) {
+    handleSubmit_tab2 (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           core
             .fetch({
-              url: "#",
-              data: {},
+              url: "/purchase/subscribe/addSubscribe",
+              data: {
+                accountId: parseInt(this.userForm.accountId),
+                fundId: parseInt(this.productForm.fundId),
+                dealTime: this.date,
+                bankCardNumber: '0000000000000000000',
+                dealAmount: this.productForm.dealAmount,
+                solveStatus: 0,
+              },
               method: "post",
             })
             .then((res) => {
-              this.success = true;
+              const time = window.sessionStorage.getItem('time');
+              if (res.code == '10000') {
+                core
+                  .fetch({
+                    url: '/time/nexttime',
+                    data: {
+                      from: time
+                    },
+                    method: 'get'
+                  })
+                  .then((res) => {
+                    if (res.code == '10000') {
+                      this.applicationNumber = res.data
+                      this.expectedDate = res.data;
+                      this.success = true;
+                    } else {
+                      this.$hMessage.error(res.msg)
+                    }
+                  })
+              }
+              else {
+                this.$hMessage.error(res.msg)
+              }
             })
             .catch(() => {
               this.$hMessage.error("申购出现错误");
@@ -518,7 +591,7 @@ export default {
         }
       });
     },
-    print() {
+    print () {
       let scale = 2;
       html2canvas(this.$refs.success, {
         backgroundColor: "#ffffff",
@@ -529,7 +602,7 @@ export default {
         this.fileDownload(imgData);
       });
     },
-    fileDownload(downloadUrl) {
+    fileDownload (downloadUrl) {
       let aLink = document.createElement("a");
       aLink.style.display = "none";
       aLink.href = downloadUrl;
@@ -539,10 +612,10 @@ export default {
       aLink.click();
       document.body.removeChild(aLink);
     },
-    back() {
+    back () {
       this.$router.push("/");
     },
-    further() {
+    further () {
       this.success = false;
     },
   },

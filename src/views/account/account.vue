@@ -293,7 +293,8 @@ export default {
                 data: {
                   accountId: this.accountId,
                   bankCardNumber: item.value,
-                  bankName: item.type
+                  bankName: item.type,
+                  balanceAmount: 5000,
                 }
               })
               .then((res) => {
