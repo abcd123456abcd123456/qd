@@ -36,9 +36,9 @@ module.exports = {
         target: 'http://127.0.0.1:8081',
         changeOrigin: true,
         pathRewrite: {
-          "^/time": ""
+          '^/time': ""
         }
-      }
+      },
     },
   },
   // 设置静态资源文件打包时的相对路径

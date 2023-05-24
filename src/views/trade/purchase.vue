@@ -173,6 +173,7 @@
                   v-model="productForm.dealAmount"
                   placeholder="请输入购买金额"
                   @on-blur="onblur"
+                  type="int"
                 ></h-input>
               </h-form-item>
 
@@ -359,10 +360,10 @@ export default {
       },
       productForm: {
         fundId: "", //产品代码
-        productName: "产品名称", //产品名称
+        productName: "", //产品名称
         bankCardNumber: "", // 银行卡号
-        balance: 100, //可用余额
-        dealAmount: "购买金额", //购买金额
+        balance: "", //可用余额
+        dealAmount: "", //购买金额
         riskLevel: "", //产品风险等级
         virtualAmount: "", //虚拟账户余额
       },
@@ -395,7 +396,7 @@ export default {
       }
     },
     bankCardChange (val) {
-      this.productForm.bankCardNumber = this.bankCardOptions[val].number;
+      this.productForm.bankCardNumber = this.bankCardOptions[val].label;
       this.productForm.balance = this.bankCardOptions[val].value;
     },
     userChange (val) {
@@ -584,7 +585,7 @@ export default {
                   .then((res) => {
                     if (res.code == '10000') {
                       this.applicationNumber = res.data
-                      this.expectedDate = res.data;
+                      this.expectedTime = res.data;
                       this.success = true;
                     } else {
                       this.$hMessage.error(res.msg)
