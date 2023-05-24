@@ -116,7 +116,7 @@ export default {
   mounted () {
     core
       .fetch({
-        url: '/time/gettime',
+        url: '/purchase/gettime',
         method: 'get',
       })
       .then((res) => {
