@@ -147,7 +147,7 @@
                       <h-option
                         v-for="option in bankCardOptions"
                         :key="option.value"
-                        :value="option.value"
+                        :value="option.number"
                       >{{ option.label }}
                       </h-option>
                     </h-select>
@@ -412,6 +412,7 @@ export default {
             return {
               value: item.balanceAmount,
               label: `${item.bankCardNumber} | ${item.bankName}`,
+              number: item.bankCardNumber
             };
           });
           console.log(this.bankCardOptions);
