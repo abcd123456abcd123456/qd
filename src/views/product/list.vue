@@ -2,7 +2,10 @@
   <div>
     <!-- 表格操作 -->
     <div class="product-action-bar">
-      <h-button type="primary" @click="addProduct">新增</h-button>
+      <h-button
+        type="primary"
+        @click="addProduct"
+      >新增</h-button>
     </div>
     <!-- 表格 -->
     <h-table
@@ -11,8 +14,14 @@
       :data="productList"
     ></h-table>
     <!-- 分页 -->
-    <div v-show="pagination.total > 0" class="pagination-wrap">
-      <h-page v-bind="pagination" @on-change="changePagination"></h-page>
+    <div
+      v-show="pagination.total > 0"
+      class="pagination-wrap"
+    >
+      <h-page
+        v-bind="pagination"
+        @on-change="changePagination"
+      ></h-page>
     </div>
     <!-- 弹框-产品新增/编辑 -->
     <h-msg-box
@@ -33,10 +42,22 @@
         :rules="productRuleValidate"
         :label-width="80"
       >
-        <h-form-item label="名称" prop="productName" required>
-          <h-input v-model="productFormData.productName" placeholder="请输入" />
+        <h-form-item
+          label="名称"
+          prop="productName"
+          required
+        >
+          <h-input
+            v-model="productFormData.productName"
+            placeholder="请输入"
+          />
         </h-form-item>
-        <h-form-item label="类型" prop="productType" required cols="2">
+        <h-form-item
+          label="类型"
+          prop="productType"
+          required
+          cols="2"
+        >
           <h-radio-group v-model="productFormData.productType">
             <h-radio
               v-for="(productType, key) in productTypeOrm"
@@ -48,10 +69,22 @@
             </h-radio>
           </h-radio-group>
         </h-form-item>
-        <h-form-item label="风险等级" prop="level" required>
-          <h-input v-model="productFormData.level" placeholder="请输入" />
+        <h-form-item
+          label="风险等级"
+          prop="level"
+          required
+        >
+          <h-input
+            v-model="productFormData.level"
+            placeholder="请输入"
+          />
         </h-form-item>
-        <h-form-item label="状态" prop="productStatus" required cols="2">
+        <h-form-item
+          label="状态"
+          prop="productStatus"
+          required
+          cols="2"
+        >
           <h-radio-group v-model="productFormData.productStatus">
             <h-radio
               v-for="(productStatus, key) in productStatusOrm"
@@ -63,16 +96,39 @@
             </h-radio>
           </h-radio-group>
         </h-form-item>
-        <h-form-item label="开放" prop="deal" required>
-          <h-input v-model="productFormData.deal" placeholder="请输入" />
+        <h-form-item
+          label="开放"
+          prop="deal"
+          required
+        >
+          <h-input
+            v-model="productFormData.deal"
+            placeholder="请输入"
+          />
         </h-form-item>
-        <h-form-item label="公司" prop="firm" required>
-          <h-input v-model="productFormData.firm" placeholder="请输入" />
+        <h-form-item
+          label="公司"
+          prop="firm"
+          required
+        >
+          <h-input
+            v-model="productFormData.firm"
+            placeholder="请输入"
+          />
         </h-form-item>
         <h-form-item style="text-align: right">
-          <h-button type="ghost" @click="productFormCancel"> 取消 </h-button>
-          <h-button type="ghost" @click="productFormReset"> 重置 </h-button>
-          <h-button type="primary" @click="productFormOk"> 提交 </h-button>
+          <h-button
+            type="ghost"
+            @click="productFormCancel"
+          > 取消 </h-button>
+          <h-button
+            type="ghost"
+            @click="productFormReset"
+          > 重置 </h-button>
+          <h-button
+            type="primary"
+            @click="productFormOk"
+          > 提交 </h-button>
         </h-form-item>
       </h-form>
     </h-msg-box>
@@ -84,14 +140,14 @@ import core from "@hsui/core";
 import { PRODUCT_TYPE_ORM, PRODUCT_STATUS_ORM } from "../../constant";
 
 export default {
-  data() {
+  data () {
     this.timer = null;
     this.productTypeOrm = PRODUCT_TYPE_ORM;
     this.productStatusOrm = PRODUCT_STATUS_ORM;
     const router = this.$router;
     const that = this;
     return {
-      productLoading: true,
+      productLoading: false,
       productMsgBoxVisible: false,
       productFormMsgBoxData: {},
       productFormData: {},
@@ -162,7 +218,7 @@ export default {
           title: "操作",
           key: "action",
           width: 200,
-          render(h, { row, row: { id, productName } = {} }) {
+          render (h, { row, row: { id, productName } = {} }) {
             return h("div", [
               h(
                 "h-poptip",
@@ -201,7 +257,7 @@ export default {
                 {
                   props: { type: "text", size: "small" },
                   on: {
-                    click() {
+                    click () {
                       that.productMsgBoxVisible = true;
                       that.productFormMsgBoxData = { ...row };
                       that.productFormData = { ...row };
@@ -215,7 +271,7 @@ export default {
                 {
                   props: { type: "text", size: "small" },
                   on: {
-                    click() {
+                    click () {
                       router.push({
                         path: `/product/${id}`,
                       });
@@ -236,16 +292,16 @@ export default {
       },
     };
   },
-  created() {
+  created () {
     // 获取产品列表;
     this.getProductList();
   },
   methods: {
-    addProduct() {
+    addProduct () {
       this.timer = null;
       this.productMsgBoxVisible = true;
     },
-    delProduct(id, productName) {
+    delProduct (id, productName) {
       core
         .fetch({
           method: "post",
@@ -268,7 +324,7 @@ export default {
           });
         });
     },
-    getProductList() {
+    getProductList () {
       core
         .fetch({
           method: "get",
@@ -289,7 +345,7 @@ export default {
           }
         });
     },
-    createProduct() {
+    createProduct () {
       core
         .fetch({
           method: "post",
@@ -304,7 +360,7 @@ export default {
           }
         });
     },
-    updateProduct() {
+    updateProduct () {
       core
         .fetch({
           method: "post",
@@ -319,7 +375,7 @@ export default {
           }
         });
     },
-    productFormOk() {
+    productFormOk () {
       this.$refs["productForm"].validate((valid) => {
         if (valid) {
           if (this.productFormData.id) {
@@ -333,33 +389,33 @@ export default {
         }
       });
     },
-    productFormCancel() {
+    productFormCancel () {
       this.resetProductFormMsgBoxData();
       this.resetProductFormData();
     },
-    productFormReset() {
+    productFormReset () {
       this.resetProductFormData();
     },
-    productMsgBoxBeforeEscClose() {
+    productMsgBoxBeforeEscClose () {
       this.resetProductFormMsgBoxData();
       this.resetProductFormData();
       return ture;
     },
-    productMsgBoxClose() {
+    productMsgBoxClose () {
       this.resetProductFormMsgBoxData();
       this.resetProductFormData();
     },
-    resetProductFormMsgBoxData() {
+    resetProductFormMsgBoxData () {
       this.productMsgBoxVisible = false;
       this.productFormMsgBoxData = {};
     },
-    resetProductFormData() {
+    resetProductFormData () {
       this.productFormData = {};
       this.timer = setTimeout(() => {
         this.$refs["productForm"].resetValidate();
       }, 0);
     },
-    changePagination(page) {
+    changePagination (page) {
       core
         .fetch({
           method: "get",
@@ -381,7 +437,7 @@ export default {
         });
     },
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.timer = null;
   },
 };

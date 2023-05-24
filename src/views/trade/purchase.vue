@@ -522,6 +522,7 @@ export default {
               method: "post",
             })
             .then((res) => {
+              const applicationNumber = res.data
               const time = window.sessionStorage.getItem('time');
               if (res.code == '10000') {
                 core
@@ -534,7 +535,7 @@ export default {
                   })
                   .then((res) => {
                     if (res.code == '10000') {
-                      this.applicationNumber = res.data
+                      this.applicationNumber = applicationNumber
                       this.expectedDate = res.data;
                       this.success = true;
                     } else {
@@ -572,6 +573,7 @@ export default {
               method: "post",
             })
             .then((res) => {
+              const applicationNumber = res.data
               const time = window.sessionStorage.getItem('time');
               if (res.code == '10000') {
                 core
@@ -584,7 +586,7 @@ export default {
                   })
                   .then((res) => {
                     if (res.code == '10000') {
-                      this.applicationNumber = res.data
+                      this.applicationNumber = applicationNumber
                       this.expectedTime = res.data;
                       this.success = true;
                     } else {

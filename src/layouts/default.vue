@@ -42,7 +42,7 @@
                 <h-icon name="order_fill"></h-icon>
                 产品管理
               </template>
-              <h-menu-item name="product">
+              <h-menu-item name="/product/list">
                 列表
               </h-menu-item>
             </h-submenu>

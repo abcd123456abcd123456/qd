@@ -24,11 +24,6 @@ export default initRouter(
           component: LiquidationIndex,
         },
         {
-          name: 'product-index',
-          path: 'product',
-          component: ProductIndex,
-        },
-        {
           name: 'account-account',
           path: 'account/account',
           component: AccountAccount,
@@ -42,6 +37,11 @@ export default initRouter(
           name: 'product-id',
           path: 'product/id',
           component: ProductId,
+        },
+        {
+          name: 'product-list',
+          path: 'product/list',
+          component: ProductList,
         },
         {
           name: 'trade-business',
@@ -82,11 +82,6 @@ function LiquidationIndex() {
     /* webpackChunkName: "liquidation-index" */ '@/views/liquidation/index.vue'
   )
 }
-function ProductIndex() {
-  return import(
-    /* webpackChunkName: "product-index" */ '@/views/product/index.vue'
-  )
-}
 function AccountAccount() {
   return import(
     /* webpackChunkName: "account-account" */ '@/views/account/account.vue'
@@ -99,6 +94,11 @@ function AccountInformation() {
 }
 function ProductId() {
   return import(/* webpackChunkName: "product-id" */ '@/views/product/id.vue')
+}
+function ProductList() {
+  return import(
+    /* webpackChunkName: "product-list" */ '@/views/product/list.vue'
+  )
 }
 function TradeBusiness() {
   return import(
