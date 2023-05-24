@@ -263,7 +263,7 @@ export default {
               }
             })
             .then((res) => {
-              if (res.code == 1000) {
+              if (res.code == '10000') {
                 this.current += 1;
                 this.tabName = 'bankForm'
                 this.accountId = res.data
@@ -298,7 +298,7 @@ export default {
                 }
               })
               .then((res) => {
-                if (res.code != 1000) {
+                if (res.code != '10000') {
                   this.$hMessage.info(res.msg)
                   flag = false;
                 }

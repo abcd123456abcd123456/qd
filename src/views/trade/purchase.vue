@@ -536,7 +536,7 @@ export default {
                   .then((res) => {
                     if (res.code == '10000') {
                       this.applicationNumber = applicationNumber
-                      this.expectedDate = res.data;
+                      this.expectedTime = res.data;
                       this.success = true;
                     } else {
                       this.$hMessage.error(res.msg)
