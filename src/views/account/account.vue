@@ -258,7 +258,7 @@ export default {
                 certificateType: this.userForm.certificateType,
                 certificateNum: this.userForm.certificateNum,
                 registerDate: registerDate,
-                userStatus: 1,
+                userStatus: 0,
                 virtualAmount: 0
               }
             })

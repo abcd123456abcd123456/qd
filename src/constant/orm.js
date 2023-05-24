@@ -1,13 +1,33 @@
-export const PRODUCT_TYPE_ORM = {
-  special: '专户产品',
-  normal: '普通'
-};
+export const PRODUCT_TYPE_ORM = [
+  {
+    value: '货币基金',
+  },
+  {
+    value: '债卷型基金',
+  },
+  {
+    value: '混合型基金',
+  },
+  {
+    value: '指数基金',
+  },
+  {
+    value: '股票型基金',
+  },
+  {
+    value: '特种基金',
+  },
+];
 
-export const PRODUCT_STATUS_ORM = {
-  releaseNormal: '正常',
-  releaseFail: '发布失败',
-  releaseSuccess: '发布成功'
-};
+export const PRODUCT_STATUS_ORM = [
+  {
+    value: '开放',
+  },
+  {
+    value: '关闭',
+  },
+];
+
 
 export const user_state_orm = {
   user_normal: '正常',

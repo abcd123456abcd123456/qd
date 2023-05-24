@@ -137,7 +137,7 @@
                 <h-col span="12">
                   <h-form-item
                     label="可用银行卡："
-                    prop="bankCard"
+                    prop="bankCardNumber"
                   >
                     <h-select
                       v-model="productForm.bankCardNumber"

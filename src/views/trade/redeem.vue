@@ -12,11 +12,12 @@
             class="label"
           >
             <h-select
-              v-model="value"
+              v-model="userForm.accountId"
               filterable
               remote
-              :remote-method="remoteMethod"
+              :remote-method="userRemote"
               remoteIcon="search"
+              @on-change="userChange($event)"
               :loading="loading"
               :loading-text="loadingText"
               style="width: 300px;"
@@ -40,14 +41,14 @@
         >
           <h-form-item label="客户名称：">
             <h-input
-              v-model="userForm.input1"
+              v-model="userForm.userName"
               readonly
               @on-keydown="onkeydown"
             ></h-input>
           </h-form-item>
           <h-form-item label="客户类型：">
             <h-input
-              v-model="userForm.input2"
+              v-model="userForm.userType"
               readonly
               @on-keydown="onkeydown"
             ></h-input>
@@ -56,7 +57,7 @@
             <h-col span="12">
               <h-form-item label="证件类型：">
                 <h-input
-                  v-model="userForm.input3"
+                  v-model="userForm.certificateType"
                   readonly
                   @on-keydown="onkeydown"
                 ></h-input>
@@ -65,7 +66,7 @@
             <h-col span="12">
               <h-form-item label="证件号码：">
                 <h-input
-                  v-model="userForm.input4"
+                  v-model="userForm.certificateNum"
                   readonly
                   @on-keydown="onkeydown"
                 ></h-input>
@@ -74,7 +75,7 @@
           </h-row>
           <h-form-item label="客户风险等级：">
             <h-input
-              v-model="userForm.input5"
+              v-model="userForm.userRiskLevel"
               readonly
               @on-keydown="onkeydown"
             ></h-input>
@@ -94,13 +95,14 @@
             <h-col span="12">
               <h-form-item
                 label="产品代码："
-                prop="productId"
+                prop="fundId"
               >
                 <h-select
-                  v-model="productForm.productId"
+                  v-model="productForm.fundId"
                   filterable
                   remote
-                  :remote-method="remoteMethod"
+                  :remote-method="productRemote"
+                  @on-change="productChange($event)"
                   remoteIcon="search"
                   :loading="loading"
                   :loading-text="loadingText"
@@ -127,22 +129,45 @@
           </h-row>
           <h-row>
             <h-col span="12">
+              <h-form-item label="可用份额：">
+                <h-input
+                  readonly
+                  v-model="productForm.balance"
+                  placeholder="选中银行卡自动填入"
+                ></h-input>
+              </h-form-item>
+            </h-col>
+            <h-col span="12">
               <h-form-item label="全部赎回：">
-                <h-switch @on-change="switchChange">
+                <h-switch
+                  v-model="switchValue"
+                  @on-change="switchChange"
+                >
                   <span slot="open">是</span>
                   <span slot="close">否</span>
                 </h-switch>
               </h-form-item>
             </h-col>
-            <h-col span="12">
-              <h-form-item label="可用份额：">
-                <h-input
-                  readonly
-                  v-model="productForm.balance"
-                  placeholder="自动填入无需填写"
-                ></h-input>
-              </h-form-item>
-            </h-col>
+          </h-row>
+          <h-row>
+            <h-form-item
+              label="选择银行卡："
+              prop="bankCardNumber"
+            >
+              <h-select
+                v-model="productForm.bankCardNumber"
+                style="width: 300px"
+                @on-change="bankCardChange"
+                widthAdaption
+              >
+                <h-option
+                  v-for="(option,index) in bankCardOptions"
+                  :key="option.value"
+                  :value="index"
+                >{{ option.label }}
+                </h-option>
+              </h-select>
+            </h-form-item>
           </h-row>
           <h-form-item
             label="赎回份额"
@@ -161,7 +186,6 @@
             >赎回</h-button>
           </h-form-item>
         </h-form>
-
       </div>
     </div>
     <div
@@ -175,8 +199,8 @@
         class="successPic"
       >
       <div class="msg">赎回成功!</div>
-      <div class="promptInfo">赎回人姓名：{{ userForm.input1 }}</div>
-      <div class="promptInfo">交易账号：{{ value }}</div>
+      <div class="promptInfo">赎回人姓名：{{ userForm.userName }}</div>
+      <div class="promptInfo">交易账号：{{ applicationNumber }}</div>
       <div style="text-align: center;">
         <div class="promptCell">
           产品信息
@@ -193,6 +217,10 @@
           <br>
           {{ applicationNumber }}
         </div>
+      </div>
+      <div style="text-align: center">
+        <div class="date">下单日期：{{ time }}</div>
+        <div class="date">预计确认日期：{{ expectedTime }}</div>
       </div>
       <div style="text-align: center; margin-top: 45px;">
         <div class="promptButton">
@@ -213,38 +241,39 @@
 </template>
 <script>
 import html2canvas from 'html2canvas';
+import core from '@hsui/core'
 export default {
   data () {
     return {
-      value: "000096",
       loading: false,
-      applicationNumber: '0012345678971237',
+      switchValue: false,
+      applicationNumber: '',
       loadingText: '',
+      time: '',
+      expectedTime: '',
       userOptions: [],
       productOptions: [],
       bankCardOptions: [],
       success: false,
       userForm: {
-        input1: '姚测1',   //客户名称
-        input2: '客户名称',   //客户类型
-        input3: '证件类型',   //证件类型
-        input4: '证件号码',   //证件号码
-        input5: '客户风险等级',   //客户风险等级
+        accountId: '',
+        userName: "姚测1", //客户名称
+        userType: "客户类型", //客户类型
+        certificateType: "证件类型", //证件类型
+        certificateNum: "证件号码", //证件号码
+        userRiskLevel: "客户风险等级", //客户风险等级
       },
       productForm: {
-        productId: '',   //产品代码
+        fundId: '',   //产品代码
         productName: '',   //产品名称
         balance: '',   //可用份额
-        amount: '赎回份额',   //赎回份额
+        amount: '',   //赎回份额
+        bankCardNumber: ''
       },
       ruleValidate: {
-        bankCard: [{ required: true, message: "请选择使用的银行卡", trigger: "change" }],
+        bankCardNumber: [{ required: true, message: "请选择使用的银行卡", trigger: "change" }],
         amount: [{ required: true, message: "购买余额不能为空", trigger: "blur" }],
-        productId: [{ required: true, message: "请选择产品代码", trigger: "change" }],
-      },
-      ruleValidate_tab2: {
-        amount: [{ required: true, message: "赎回份额不能为空", trigger: "blur" }],
-        productId: [{ required: true, message: "请选择产品代码", trigger: "change" }],
+        fundId: [{ required: true, message: "请选择产品代码", trigger: "change" }],
       },
     };
   },
@@ -257,13 +286,178 @@ export default {
     onkeydown () {
       this.$hMessage.info("选中账号自动填入");
     },
-    remoteMethod () {
-
+    userRemote (id) {
+      if (id != '') {
+        core
+          .fetch({
+            method: "get",
+            url: "/purchase/user/getUsersByID",
+            data: {
+              accountId: id,
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            this.userOptions = res.data.map((item) => {
+              return {
+                value: item + "",
+                label: item + "",
+              };
+            });
+          })
+          .catch(() => {
+            this.$hMessage.error("获取用户ID出错");
+          });
+      }
+      else {
+        this.userOptions = []
+      }
+    },
+    productRemote (id) {
+      if (id != '') {
+        core
+          .fetch({
+            method: "get",
+            url: "/purchase/fund/getFundsByID",
+            data: {
+              fundId: id,
+            },
+          })
+          .then((res) => {
+            this.productOptions = res.data.map((item) => {
+              return {
+                value: item + "",
+                label: item + "",
+              };
+            });
+          })
+          .catch(() => {
+            this.$hMessage.error("获取产品ID出错");
+          });
+      }
+      else {
+        this.productOptions = []
+      }
+    },
+    bankCardChange (val) {
+      this.productForm.bankCardNumber = this.bankCardOptions[val].label;
+      if (this.productForm.fundId || this.userForm.accountId) {
+        return
+      }
+      core
+        .fetch({
+          url: '/purchase/userFund/getShareByID',
+          method: 'get',
+          data: {
+            accountId: this.userForm.accountId,
+            fundId: this.productForm.fundId,
+            bankCardNumber: this.productForm.bankCardNumber
+          }
+        })
+        .then((res) => {
+          if (res.code == '10000') {
+            this.productForm.balance = res.data
+          }
+          else {
+            this.$hMessage.error(res.msg)
+          }
+        })
+        .catch(() => {
+          this.$hMessage.error('网络出现错误,请稍后再来！')
+        })
+    },
+    productChange (val) {
+      core
+        .fetch({
+          method: "get",
+          url: "/purchase/fund/getFundByID",
+          data: {
+            fundId: val,
+          },
+        })
+        .then((res) => {
+          this.productForm.productName = res.data.fundName;
+        })
+        .catch(() => {
+          this.$hMessage.error("获取产品信息出错");
+          this.disabled = true;
+        });
+    },
+    userChange (val) {
+      core
+        .fetch({
+          method: "get",
+          url: "/purchase/user/getUserVoByID",
+          data: {
+            accountId: val,
+          },
+        })
+        .then((res) => {
+          this.userForm.accountId = val;
+          this.bankCardOptions = res.data.bankCards.map((item) => {
+            return {
+              value: item.balanceAmount,
+              label: item.bankCardNumber,
+            };
+          });
+          console.log(this.bankCardOptions);
+          this.userForm.certificateNum = res.data.certificateNum;
+          this.userForm.certificateType = res.data.certificateType;
+          this.userForm.userName = res.data.userName;
+          this.userForm.userType = res.data.userType;
+          this.userForm.userRiskLevel = res.data.userRiskLevel;
+        })
+        .catch(() => {
+          this.$hMessage.error("获取用户信息出错");
+          this.disabled = true;
+        });
     },
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.success = true;
+          this.time = window.sessionStorage.getItem('time')
+          core
+            .fetch({
+              url: "/purchase/subscribe/addSubscribe",
+              data: {
+                accountId: parseInt(this.userForm.accountId),
+                fundId: parseInt(this.productForm.fundId),
+                dealTime: this.time,
+                bankCardNumber: this.productForm.bankCardNumber,
+                dealShare: this.productForm.balance,
+                solveStatus: 0,
+              },
+              method: "post",
+            })
+            .then((res) => {
+              const applicationNumber = res.data
+              const time = window.sessionStorage.getItem('time');
+              if (res.code == '10000') {
+                core
+                  .fetch({
+                    url: '/purchase/nexttime',
+                    data: {
+                      from: time
+                    },
+                    method: 'get'
+                  })
+                  .then((res) => {
+                    if (res.code == '10000') {
+                      this.applicationNumber = applicationNumber
+                      this.expectedTime = res.data;
+                      this.success = true;
+                    } else {
+                      this.$hMessage.error(res.msg)
+                    }
+                  })
+              }
+              else {
+                this.$hMessage.error(res.msg)
+              }
+            })
+            .catch(() => {
+              this.$hMessage.error("赎回出现错误");
+            });
         } else {
           this.$hMessage.error("表单验证失败!");
           this.success = true;
