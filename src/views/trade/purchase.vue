@@ -143,11 +143,12 @@
                       v-model="productForm.bankCardNumber"
                       style="width: 300px"
                       @on-change="bankCardChange"
+                      widthAdaption
                     >
                       <h-option
-                        v-for="option in bankCardOptions"
+                        v-for="(option,index) in bankCardOptions"
                         :key="option.value"
-                        :value="option.number"
+                        :value="index"
                       >{{ option.label }}
                       </h-option>
                     </h-select>
@@ -311,8 +312,8 @@
         </div>
       </div>
       <div style="text-align: center">
-        <div class="date">下单日期：{{ date }}</div>
-        <div class="date">预计确认日期：{{ expectedDate }}</div>
+        <div class="date">下单日期：{{ time }}</div>
+        <div class="date">预计确认日期：{{ expectedTime }}</div>
       </div>
       <div style="text-align: center; margin-top: 45px">
         <div class="promptButton">
@@ -338,14 +339,13 @@ export default {
   data () {
     return {
       loading: false,
-      tabName: 'virtualAmount',
+      tabName: 'bankCard',
       applicationNumber: "0012345678971237",
       loadingText: "",
-      date: '',
-      expectedDate: '',
+      time: '',
+      expectedTime: '',
       disabled: false,
       userOptions: [],
-      disabled: false,
       productOptions: [],
       bankCardOptions: [],
       success: false,
@@ -364,7 +364,7 @@ export default {
         balance: 100, //可用余额
         dealAmount: "购买金额", //购买金额
         riskLevel: "", //产品风险等级
-        virtualAmount: "100", //虚拟账户余额
+        virtualAmount: "", //虚拟账户余额
       },
       ruleValidate: {
         bankCardNumber: [
@@ -395,7 +395,8 @@ export default {
       }
     },
     bankCardChange (val) {
-      this.productForm.balance = val;
+      this.productForm.bankCardNumber = this.bankCardOptions[val].number;
+      this.productForm.balance = this.bankCardOptions[val].value;
     },
     userChange (val) {
       core
@@ -449,60 +450,70 @@ export default {
       this.$hMessage.info("选中账号自动填入");
     },
     userRemote (id) {
-      core
-        .fetch({
-          method: "get",
-          url: "/purchase/user/getUsersByID",
-          data: {
-            accountId: id,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          this.userOptions = res.data.map((item) => {
-            return {
-              value: item + "",
-              label: item + "",
-            };
+      if (id != '') {
+        core
+          .fetch({
+            method: "get",
+            url: "/purchase/user/getUsersByID",
+            data: {
+              accountId: id,
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            this.userOptions = res.data.map((item) => {
+              return {
+                value: item + "",
+                label: item + "",
+              };
+            });
+          })
+          .catch(() => {
+            this.$hMessage.error("获取用户ID出错");
           });
-        })
-        .catch(() => {
-          this.$hMessage.error("获取用户ID出错");
-        });
+      }
+      else {
+        this.userOptions = []
+      }
     },
     productRemote (id) {
-      core
-        .fetch({
-          method: "get",
-          url: "/purchase/fund/getFundsByID",
-          data: {
-            fundId: id,
-          },
-        })
-        .then((res) => {
-          this.productOptions = res.data.map((item) => {
-            return {
-              value: item + "",
-              label: item + "",
-            };
+      if (id != '') {
+        core
+          .fetch({
+            method: "get",
+            url: "/purchase/fund/getFundsByID",
+            data: {
+              fundId: id,
+            },
+          })
+          .then((res) => {
+            this.productOptions = res.data.map((item) => {
+              return {
+                value: item + "",
+                label: item + "",
+              };
+            });
+            console.log(this.productOptions);
+          })
+          .catch(() => {
+            this.$hMessage.error("获取产品ID出错");
           });
-          console.log(this.productOptions);
-        })
-        .catch(() => {
-          this.$hMessage.error("获取产品ID出错");
-        });
+      }
+      else {
+        this.productOptions = []
+      }
     },
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.date = window.sessionStorage.getItem('date')
+          this.time = window.sessionStorage.getItem('time')
           core
             .fetch({
               url: "/purchase/subscribe/addSubscribe",
               data: {
                 accountId: parseInt(this.userForm.accountId),
                 fundId: parseInt(this.productForm.fundId),
-                dealTime: this.date,
+                dealTime: this.time,
                 bankCardNumber: this.productForm.bankCardNumber,
                 dealAmount: this.productForm.dealAmount,
                 solveStatus: 0,

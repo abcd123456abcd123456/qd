@@ -29,14 +29,14 @@ module.exports = {
         target: 'http://127.0.0.1:8081',
         changeOrigin: true,
         pathRewrite: {
-          '^account': ""
+          '^/account': ""
         }
       },
       "/time": {
         target: 'http://127.0.0.1:8081',
         changeOrigin: true,
         pathRewrite: {
-          "^time": ""
+          "^/time": ""
         }
       }
     },
