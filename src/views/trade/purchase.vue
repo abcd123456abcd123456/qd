@@ -413,7 +413,7 @@ export default {
           this.bankCardOptions = res.data.bankCards.map((item) => {
             return {
               value: item.balanceAmount,
-              label: `${item.bankCardNumber} | ${item.bankName}`,
+              label: item.bankCardNumber,
               number: item.bankCardNumber
             };
           });

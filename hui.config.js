@@ -25,20 +25,20 @@ module.exports = {
       pathRewrite: {
         "^/purchase": "",
       },
-      "/account": {
-        target: 'http://127.0.0.1:8081',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/account': ""
-        }
-      },
-      "/time": {
-        target: 'http://127.0.0.1:8081',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/time': ""
-        }
-      },
+    },
+    "/account": {
+      target: 'http://127.0.0.1:8081',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/account': ""
+      }
+    },
+    "/time": {
+      target: 'http://127.0.0.1:8081',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/time': ""
+      }
     },
   },
   // 设置静态资源文件打包时的相对路径
