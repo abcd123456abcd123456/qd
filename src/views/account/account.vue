@@ -249,7 +249,7 @@ export default {
         if (valid) {
           core.
             fetch({
-              url: '/account/user/addUser',
+              url: '/purchase/user/addUser',
               method: 'post',
               data: {
                 userType: this.userForm.userType,
@@ -288,7 +288,7 @@ export default {
           for (const item of this.bankInfo.items) {
             core
               .fetch({
-                url: '/account/user/addBankCard',
+                url: '/purchase/user/addBankCard',
                 method: 'post',
                 data: {
                   accountId: this.accountId,

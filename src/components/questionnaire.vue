@@ -172,7 +172,7 @@ export default {
         }
         core
           .fetch({
-            url: '/account/user/setRiskLevel',
+            url: '/purchase/user/setRiskLevel',
             data: {
               accountId: this.accountId,
               riskLevel: userRiskLevel

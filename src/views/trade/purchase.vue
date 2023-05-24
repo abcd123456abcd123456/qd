@@ -527,7 +527,7 @@ export default {
               if (res.code == '10000') {
                 core
                   .fetch({
-                    url: '/time/nexttime',
+                    url: '/purchase/nexttime',
                     data: {
                       from: time
                     },
