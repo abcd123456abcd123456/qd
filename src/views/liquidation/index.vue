@@ -123,6 +123,7 @@
             type="primary"
             class="button"
             @click="confirm"
+            :disabled="data.length"
           >一键确认</h-button>
         </div>
       </h-tab-pane>
@@ -232,6 +233,7 @@ export default {
             }
             else {
               this.$hMessage.error(res.msg)
+              this.data = []
             }
           })
           .catch(() => {
@@ -252,6 +254,7 @@ export default {
             }
             else {
               this.$hMessage.error(res.msg)
+              this.data = []
             }
           })
           .catch(() => {
@@ -302,7 +305,7 @@ export default {
             window.sessionStorage.setItem('time', res.data.tmpTime)
           }
           else {
-            this.$hMessage.error(res.msg)
+            this.$hMessage.error(res.msg);
           }
         })
         .catch(() => {
@@ -410,6 +413,9 @@ export default {
 .quotation {
   margin-top: 100px;
   margin-left: 360px;
+}
+.tableContainer {
+  margin-top: 10px;
 }
 </style>
 <style>

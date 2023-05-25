@@ -1,273 +1,129 @@
 <template>
-  <div>
-    <h-form-gird
-      ref="formGird"
-      v-model="formItem1"
-      :columns="fcolumn"
-      :data="fdata"
-      height="200"
-      :autoClear="false"
-      :stripe="true"
-      :border="true"
-      :showHeader="true"
-      noDataText=""
-      :canDrag="true"
-      :loading="false"
-      @on-row-click="rowClick"
-    >
+  <div class="body">
+    <div class="search">
       <h-form
-        ref="formItem1"
-        :model="formItem1"
-        :compareModel="formItem2"
-        :label-width="80"
-        errorFocus
-        cols="2"
+        :model="searchForm"
+        :label-width="100"
+        label-position="left"
+        class="searchForm"
       >
-        <h-form-item
-          label="交易编号"
-          prop="input"
-          required
-        >
-          <h-input
-            v-model="formItem1.input"
-            placeholder="请输入"
-          ></h-input>
-        </h-form-item>
-        <h-form-item label="交易时间">
-          <h-row>
-            <h-col span="11">
-              <h-form-item
-                prop="date"
-                required
+        <h-row>
+          <h-col span="10">
+            <h-form-item label="产品代码">
+              <h-input
+                v-model="searchForm.fundId"
+                placeholder="请输入产品代码"
+              ></h-input>
+            </h-form-item>
+          </h-col>
+          <h-col span="8">
+            <h-form-item label="产品名称">
+              <h-input
+                v-model="searchForm.fundName"
+                placeholder="请输入产品名称"
+              ></h-input>
+            </h-form-item>
+          </h-col>
+          <h-col span="6">
+            <h-form-item>
+              <h-button
+                type="primary"
+                @click="search"
+              >查询</h-button>
+              <h-button @click="handleReset('formValid')">重置</h-button>
+            </h-form-item>
+          </h-col>
+        </h-row>
+        <h-row>
+          <h-col span="10">
+            <h-form-item label="产品类型">
+              <h-select
+                v-model="searchForm.fundType"
+                placeholder="请选择产品类型"
               >
-                <h-datePicker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="formItem1.date"
-                ></h-datePicker>
-              </h-form-item>
-            </h-col>
-          </h-row>
-        </h-form-item>
-        <h-form-item
-          label="交易类型"
-          prop="select"
-          required
-        >
-          <h-select
-            v-model="formItem1.select"
-            filterable
-          >
-            <h-option value="beijing">北京市</h-option>
-            <h-option value="shanghai">上海市</h-option>
-            <h-option value="shenzhen">深圳市</h-option>
-          </h-select>
-        </h-form-item>
-        <!-- 后添加的 要修改 -->
-        <h-form-item
-          label="交易状态"
-          prop="status"
-          required
-        >
-          <h-select
-            v-model="formItem1.status"
-            filterable
-          >
-            <h-option value="beijing">北京市</h-option>
-            <h-option value="shanghai">上海市</h-option>
-            <h-option value="shenzhen">深圳市</h-option>
-          </h-select>
-        </h-form-item>
-        <h-form-item
-          label="交易金额"
-          prop="money"
-          required
-        >
-          <h-typefield v-model="formItem1.money"></h-typefield>
-        </h-form-item>
-        <!-- 后添加的 要修改 -->
-        <h-form-item
-          label="姓名"
-          prop="name"
-          required
-        >
-          <h-input
-            v-model="formItem1.name"
-            placeholder="请输入"
-          ></h-input>
-        </h-form-item>
-        <h-form-item
-          label="性别"
-          prop="radio"
-          required
-        >
-          <h-radio-group v-model="formItem1.radio">
-            <h-radio label="male">男</h-radio>
-            <h-radio label="female">女</h-radio>
-          </h-radio-group>
-        </h-form-item>
-        <h-form-item
-          label="关键字"
-          prop="textarea"
-          required
-        >
-          <h-input
-            v-model="formItem1.textarea"
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 5 }"
-            placeholder="请输入..."
-          ></h-input>
-        </h-form-item>
+                <h-option value="货币">货币基金</h-option>
+                <h-option value="债券型">债券型基金</h-option>
+                <h-option value="混合型">混合型基金</h-option>
+                <h-option value="指数">指数基金</h-option>
+                <h-option value="股票型">股票型基金</h-option>
+                <h-option value="特种">特种基金</h-option>
+              </h-select>
+            </h-form-item>
+          </h-col>
+          <h-col span="8">
+            <h-form-item label="产品风险等级">
+              <h-select
+                v-model="searchForm.fundRiskLevel"
+                placeholder="请选择产品风险等级"
+              >
+                <h-option value="1">1</h-option>
+                <h-option value="2">2</h-option>
+                <h-option value="3">3</h-option>
+                <h-option value="4">4</h-option>
+                <h-option value="5">5</h-option>
+              </h-select>
+            </h-form-item>
+          </h-col>
+        </h-row>
       </h-form>
-      <div
-        slot="footer"
-        style="margin-top: 8px;"
-      >
-        <!-- 点击提交后进行过滤 -->
-        <Button
-          type="primary"
-          @on-click="fdata = fdataFilter()"
-        >提交</Button>
-        <Button @on-click="fdata = originData">取消</Button>
-      </div>
-    </h-form-gird>
+    </div>
+    <h-table
+      :loading="productLoading"
+      :columns="productColumns"
+      :data="productList"
+      class="table"
+      stripe
+    ></h-table>
+    <!-- 分页 -->
+    <div
+      v-show="pagination.total > 0"
+      class="pagination-wrap"
+    >
+      <h-page
+        v-bind="pagination"
+        @on-change="changePagination"
+      ></h-page>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      fcolumn: [
-        { key: 'check', title: '选择', type: 'selection', width: 50 },
-        { key: 'input', title: '交易编号', align: 'center' },
-        { key: 'date', title: '交易时间', align: 'center' },
-        { key: 'select', title: '交易类型', align: 'center' },
-        { key: 'status', title: '交易状态', align: 'center' },
-        { key: 'money', title: '交易金额', align: 'center' },
-        { key: 'name', title: '姓名', align: 'center' },
-        { key: 'radio', title: '性别', align: 'center' },
-        // { key: 'textarea', title: '关键字', align: 'center' },
-      ],
-      originData: [
-        {
-          input: '1',
-          date: 'Wed May 03 2023 00:00:00 GMT+0800 (中国标准时间)',
-          select: 'shanghai',
-          status: 'shanghai',
-          money: '1.00',
-          name: '1',
-          radio: 'male',
-          textarea: '123a',
-        },
-        {
-          input: '',
-          date: '',
-          select: '',
-          status: '',
-          money: '',
-          name: '',
-          radio: '',
-        },
-        {
-          input: '',
-          date: '',
-          select: '',
-          status: '',
-          money: '',
-          name: '',
-          radio: '',
-        },
-      ],
-      fdata: [
-        {
-          input: '1',
-          date: 'Wed May 03 2023 00:00:00 GMT+0800 (中国标准时间)',
-          select: 'shanghai',
-          status: 'shanghai',
-          money: '1.00',
-          name: '1',
-          radio: 'male',
-          textarea: '123a',
-        },
-        {
-          input: '',
-          date: '',
-          select: '',
-          status: '',
-          money: '',
-          name: '',
-          radio: '',
-        },
-        {
-          input: '',
-          date: '',
-          select: '',
-          status: '',
-          money: '',
-          name: '',
-          radio: '',
-        },
-      ],
-      formItem1: {
-        input: '',
-        date: '',
-        select: '',
-        status: '',
-        money: '',
-        name: '',
-        radio: '',
-        textarea: '',
+      searchForm: {
+        fundName: '',
+        fundType: '',
+        fundId: '',
+        fundRiskLevel: '',
       },
-      formItem2: {
-        input: '',
-        date: '',
-        select: '',
-        status: '',
-        money: '',
-        name: '',
-        radio: '',
-        textarea: '',
+      pagination: {
+        current: 1,
+        "page-size": 10,
+        total: 0,
       },
-      select2: '',
     }
-  },
-  methods: {
-    rowClick (e) {
-      console.log(e)
-    },
-    getAllData () {
-      // 将fdata中的数据重新加载到表单中
-      this.$refs.formGird.setData(this.fdata)
-      // 获取表单中的数据
-      console.log(this.$refs.formGird.getAllData())
-    },
-    // 过滤出fdata中满足formItem1有值的数据项, 并将其赋值给fdata
-    fdataFilter () {
-      let fdata = this.originData
-      let formItem1 = this.formItem1
-      let fdataFilter = []
-      for (let i = 0; i < fdata.length; i++) {
-        let item = fdata[i]
-        let flag = true
-        for (let key in formItem1) {
-          if (formItem1[key] !== '' && item[key] !== formItem1[key]) {
-            // fdata.textarea字符串在formItem1.textarea字符串中则加入其中
-            if (key === 'textarea' && item[key].indexOf(formItem1[key]) !== -1) {
-              continue
-            }
-            flag = false
-            break
-          }
-        }
-        if (flag) {
-          fdataFilter.push(item)
-        }
-      }
-      return fdataFilter
-    },
-  },
+  }
 }
 </script>
+<style lang="less" scoped>
+.product-action-bar {
+  margin-bottom: 12px;
+  margin-left: 7px;
+}
 
-<style scoped>
+.pagination-wrap {
+  margin-top: 12px;
+  text-align: right;
+}
+.body {
+  background-color: #f7f7f7;
+}
+.table {
+  height: 450px;
+}
+.searchForm {
+  margin-left: 20px;
+  padding-top: 20px;
+}
 </style>
+<style>
