@@ -24,24 +24,34 @@ export default {
 </script> -->
 <template>
   <div>
-    <h-switch
-      v-model="switch1"
-      @on-change="change"
-    ></h-switch>
-    {{ switch1 }}
+    <h-tabs value="name1">
+      <h-tab-pane
+        label="标签一"
+        name="name1"
+      >
+        <h-tabs value="name2">
+          <h-tab-pane
+            label="标签一"
+            name="name1"
+          >标签一的内容</h-tab-pane>
+          <h-tab-pane
+            label="标签二"
+            name="name2"
+          >标签二的内容</h-tab-pane>
+          <h-tab-pane
+            label="标签三"
+            name="name3"
+          >标签三的内容</h-tab-pane>
+        </h-tabs>
+      </h-tab-pane>
+      <h-tab-pane
+        label="标签二"
+        name="name2"
+      >标签二的内容</h-tab-pane>
+      <h-tab-pane
+        label="标签三"
+        name="name3"
+      >标签三的内容</h-tab-pane>
+    </h-tabs>
   </div>
 </template>
-<script>
-export default {
-  data () {
-    return {
-      switch1: false,
-    };
-  },
-  methods: {
-    change (status) {
-      this.$hMessage.info(`开关状态：${status}`);
-    },
-  },
-};
-</script>

@@ -94,6 +94,7 @@
 
 <script>
 import core from '@hsui/core'
+import EmitBus from '../constant/EmitBus.js'
 export default {
   data () {
     return {
@@ -134,6 +135,11 @@ export default {
         window.sessionStorage.setItem('time', this.time)
         window.sessionStorage.setItem('date', this.getDate(this.time))
       })
+    EmitBus.$on('update', (item) => {
+      this.week = item.week;
+      this.time = item.time;
+      console.log(item);
+    })
   }
 };
 </script>
@@ -152,7 +158,7 @@ export default {
   position: relative;
 }
 </style>
-<style lang="less">
+<style lang="less" scoped>
 .h-menu-vertical {
   height: 100vh;
 }

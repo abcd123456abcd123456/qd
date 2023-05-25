@@ -216,7 +216,7 @@ export default {
         "page-size": 10,
         total: 0,
       },
-      productLoading: false,
+      productLoading: true,
       productMsgBoxVisible: false,
       productFormMsgBoxData: {},
       productFormData: {
@@ -255,7 +255,6 @@ export default {
         {
           title: "产品编号",
           key: "fundId",
-          render: (h, { row: { fundId } }) => h("span", {}, fundId.slice(-10)),
         },
         {
           title: "产品名称",
@@ -264,9 +263,6 @@ export default {
         {
           title: "产品类型",
           key: "fundType",
-          render: (h, { row: { fundType } }) => {
-            return h("span", {}, this.productTypeOrm[fundType].value);
-          },
         },
         {
           title: "产品风险等级",
@@ -275,9 +271,6 @@ export default {
         {
           title: "产品状态",
           key: "fundStatus",
-          render: (h, { row: { fundStatus } }) => {
-            return h("span", {}, this.productStatusOrm[fundStatus].value);
-          },
         },
         {
           title: "发行公司",
@@ -287,7 +280,7 @@ export default {
           title: "操作",
           key: "action",
           width: 200,
-          render (h, { row, row: { fundId, fundName } = {} }) {
+          render (h, { row, row: { fundId } = {} }) {
             return h("div", [
               h(
                 "Button",
