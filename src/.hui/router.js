@@ -29,11 +29,6 @@ export default initRouter(
           component: AccountAccount,
         },
         {
-          name: 'account-information',
-          path: 'account/information',
-          component: AccountInformation,
-        },
-        {
           name: 'product-id',
           path: 'product/id',
           component: ProductId,
@@ -85,11 +80,6 @@ function LiquidationIndex() {
 function AccountAccount() {
   return import(
     /* webpackChunkName: "account-account" */ '@/views/account/account.vue'
-  )
-}
-function AccountInformation() {
-  return import(
-    /* webpackChunkName: "account-information" */ '@/views/account/information.vue'
   )
 }
 function ProductId() {

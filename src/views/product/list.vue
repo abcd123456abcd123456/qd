@@ -365,11 +365,7 @@ export default {
           },
         },
       ],
-      productList: [
-        {
-          index: '1',
-        }
-      ],
+      productList: [],
     };
   },
   created () {
@@ -516,6 +512,22 @@ export default {
 
     },
     changePagination (page) {
+      let fundName = null;
+      let fundType = null;
+      let fundId = null;
+      let fundRiskLevel = null;
+      if (this.searchForm.fundName != '') {
+        fundName = this.searchForm.fundName
+      }
+      if (this.searchForm.fundType !== '') {
+        fundType = this.searchForm.fundType
+      }
+      if (this.searchForm.fundId != '') {
+        fundId = this.searchForm.fundId
+      }
+      if (this.searchForm.fundRiskLevel != '') {
+        fundRiskLevel = this.searchForm.fundRiskLevel
+      }
       core
         .fetch({
           method: "post",

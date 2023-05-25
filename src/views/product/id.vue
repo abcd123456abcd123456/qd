@@ -31,7 +31,7 @@ export default {
     };
   },
   created () {
-    const { params: { id } = {} } = this.$route;
+    let { params: { id } = {} } = this.$route;
     if (id == '' || id == undefined) {
       id = window.sessionStorage.getItem('fundId')
     }
@@ -52,15 +52,20 @@ export default {
           this.$hMessage.error(res.msg)
         }
       })
-      .catach(() => {
+      .catch(() => {
         this.$hMessage.error('获取净值信息出错')
       })
   },
   mounted () {
-    this.drawLineEchart();
+    setTimeout(() => {
+      //code
+      this.drawLineEchart();
+    }, 1000);
+
   },
   methods: {
     drawLineEchart () {
+      console.log(this.data);
       // 基于准备好的dom，初始化echarts实例
       const echart = this.$echarts.init(document.getElementById("lineEchart"));
       let date = [];

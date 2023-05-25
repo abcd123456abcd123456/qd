@@ -54,9 +54,6 @@
               <h-menu-item name="/account/account">
                 开户
               </h-menu-item>
-              <h-menu-item name="/account/information">
-                资料修改
-              </h-menu-item>
             </h-submenu>
             <h-submenu name="trade">
               <template v-slot:title>
