@@ -339,6 +339,12 @@ export default {
           data: {
             page: 1,
             num: 10,
+            dealNumber: dealNumber,
+            accountId: accountId,
+            fundId: fundId,
+            queryDealStartTime: queryDealStartTime,
+            queryDealEndTime: queryDealEndTime,
+            dealType: dealType,
           },
         })
         .then((res) => {
@@ -386,6 +392,12 @@ export default {
           data: {
             page: page,
             num: 10,
+            dealNumber: dealNumber,
+            accountId: accountId,
+            fundId: fundId,
+            queryDealStartTime: queryDealStartTime,
+            queryDealEndTime: queryDealEndTime,
+            dealType: dealType,
           },
         })
         .then((res) => {
