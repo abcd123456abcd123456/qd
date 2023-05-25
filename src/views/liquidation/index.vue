@@ -169,35 +169,12 @@ export default {
           key: "dealTime",
         },
         {
-          title: "申购份额",
+          title: "申购金额",
           key: "dealAmount",
         },
         {
           title: "银行卡号",
           key: "bankCardNumber",
-        },
-        {
-          title: "操作",
-          key: "action",
-          width: 200,
-          render (h) {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: { type: "text", size: "small" },
-                  on: {
-                    click () {
-                      that.productMsgBoxVisible = true;
-                      that.productFormMsgBoxData = { ...row };
-                      that.productFormData = { ...row };
-                    },
-                  },
-                },
-                "查看"
-              ),
-            ]);
-          },
         },
       ],
       redemptionColumns: [
@@ -238,6 +215,7 @@ export default {
   methods: {
     change (name) {
       this.activeName = name;
+      this.getData();
     },
     getData () {
       if (this.activeName == 'redemptionColumns') {
@@ -344,7 +322,7 @@ export default {
         .then((res) => {
           if (res.code == '10000') {
             this.$hMessage.success('更新成功！')
-            this.disabledQ = true;
+            this.disabledQ = false;
           }
           else {
             this.$hMessage.error(res.msg)
@@ -357,6 +335,7 @@ export default {
     quotationOk () {
       this.current += 1;
       this.tabName = 'calculateShare'
+      this.getData()
     },
     confirm () {
       console.log(this.activeName);
