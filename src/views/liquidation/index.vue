@@ -328,7 +328,7 @@ export default {
     updateTime () {
       core
         .fetch({
-          url: '/purchase/updateTime',
+          url: '/purchase/updatetime',
           method: 'get'
         })
         .then((res) => {
@@ -438,6 +438,7 @@ export default {
 }
 .tab {
   margin-top: 20px;
+  overflow: auto;
 }
 .button {
   margin-left: 360px;
