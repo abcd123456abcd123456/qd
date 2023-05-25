@@ -42,12 +42,12 @@
                   v-model="searchForm.fundType"
                   placeholder="请选择产品类型"
                 >
-                  <h-option value="货币基金">货币基金</h-option>
-                  <h-option value="债券型基金">债券型基金</h-option>
-                  <h-option value="混合型基金">混合型基金</h-option>
-                  <h-option value="指数基金">指数基金</h-option>
-                  <h-option value="股票型基金">股票型基金</h-option>
-                  <h-option value="特种基金">特种基金</h-option>
+                  <h-option value="货币">货币基金</h-option>
+                  <h-option value="债券型">债券型基金</h-option>
+                  <h-option value="混合型">混合型基金</h-option>
+                  <h-option value="指数">指数基金</h-option>
+                  <h-option value="股票型">股票型基金</h-option>
+                  <h-option value="特种">特种基金</h-option>
                 </h-select>
               </h-form-item>
             </h-col>
@@ -132,7 +132,7 @@
                 v-for="(item,index) in productTypeOrm"
                 :key="index"
                 style="margin-right: 24px"
-                :label="item.value"
+                :label="index"
               >
                 {{ item.value }}
               </h-radio>
@@ -158,7 +158,7 @@
                 v-for="(item,index) in productStatusOrm"
                 :key="index"
                 style="margin-right: 24px"
-                :label="item.value"
+                :label="index"
               >
                 {{ item.value }}
               </h-radio>
@@ -254,8 +254,8 @@ export default {
         },
         {
           title: "产品编号",
-          key: "id",
-          render: (h, { row: { id } }) => h("span", {}, id.slice(-10)),
+          key: "fundId",
+          render: (h, { row: { fundId } }) => h("span", {}, fundId.slice(-10)),
         },
         {
           title: "产品名称",
@@ -264,8 +264,8 @@ export default {
         {
           title: "产品类型",
           key: "fundType",
-          render: (h, { row: { productType } }) => {
-            return h("span", {}, this.productTypeOrm[productType]);
+          render: (h, { row: { fundType } }) => {
+            return h("span", {}, this.productTypeOrm[fundType].value);
           },
         },
         {
@@ -275,8 +275,8 @@ export default {
         {
           title: "产品状态",
           key: "fundStatus",
-          render: (h, { row: { productStatus } }) => {
-            return h("span", {}, this.productStatusOrm[productStatus]);
+          render: (h, { row: { fundStatus } }) => {
+            return h("span", {}, this.productStatusOrm[fundStatus].value);
           },
         },
         {
@@ -287,7 +287,7 @@ export default {
           title: "操作",
           key: "action",
           width: 200,
-          render (h, { row, row: { id, productName } = {} }) {
+          render (h, { row, row: { fundId, fundName } = {} }) {
             return h("div", [
               h(
                 "Button",
@@ -310,7 +310,10 @@ export default {
                   on: {
                     click () {
                       router.push({
-                        path: `/product/${id}`,
+                        name: 'product-id',
+                        params: {
+                          id: fundId
+                        }
                       });
                     },
                   },

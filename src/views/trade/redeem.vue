@@ -267,7 +267,7 @@ export default {
         fundId: '',   //产品代码
         productName: '',   //产品名称
         balance: '',   //可用份额
-        amount: '',   //赎回份额
+        amount: null,   //赎回份额
         bankCardNumber: ''
       },
       ruleValidate: {
@@ -341,7 +341,7 @@ export default {
     },
     bankCardChange (val) {
       this.productForm.bankCardNumber = this.bankCardOptions[val].label;
-      if (this.productForm.fundId || this.userForm.accountId) {
+      if (this.productForm.fundId == null || this.userForm.accountId == null) {
         return
       }
       core
@@ -356,7 +356,7 @@ export default {
         })
         .then((res) => {
           if (res.code == '10000') {
-            this.productForm.balance = res.data
+            this.productForm.balance = res.data.ownShare;
           }
           else {
             this.$hMessage.error(res.msg)
@@ -418,13 +418,13 @@ export default {
           this.time = window.sessionStorage.getItem('time')
           core
             .fetch({
-              url: "/purchase/subscribe/addSubscribe",
+              url: "/purchase/redemption/addRedemption",
               data: {
                 accountId: parseInt(this.userForm.accountId),
                 fundId: parseInt(this.productForm.fundId),
                 dealTime: this.time,
                 bankCardNumber: this.productForm.bankCardNumber,
-                dealShare: this.productForm.balance,
+                dealShare: parseFloat(this.productForm.amount),
                 solveStatus: 0,
               },
               method: "post",
