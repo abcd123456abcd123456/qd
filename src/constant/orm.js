@@ -13,6 +13,13 @@ export const PRODUCT_STATUS_ORM = {
   '关闭': '关闭',
 }
 
+export const PRODUCT_DEAL_STATUS_ORM = {
+  0: '正常交易',
+  1: '暂停申购',
+  2: '暂停赎回',
+  3: '暂停所有交易'
+}
+
 
 export const user_state_orm = {
   user_normal: '正常',

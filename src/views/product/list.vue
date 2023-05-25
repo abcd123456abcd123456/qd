@@ -99,7 +99,7 @@
         footerHide
         :escClose="true"
         :title="
-        productFormMsgBoxData.id
+        productFormMsgBoxData.fundId
           ? `编辑${productFormMsgBoxData.fundName}`
           : '新增'
       "
@@ -144,19 +144,44 @@
             prop="fundRiskLevel"
             required
           >
-            <h-input
+            <h-select
               v-model="productFormData.fundRiskLevel"
               placeholder="请输入"
-            />
+            >
+              <h-option value="1">1</h-option>
+              <h-option value="2">2</h-option>
+              <h-option value="3">3</h-option>
+              <h-option value="4">4</h-option>
+              <h-option value="5">5</h-option>
+            </h-select>
           </h-form-item>
           <h-form-item
             label="产品状态"
             prop="fundStatus"
             required
           >
-            <h-radio-group v-model="productFormData.fundStatus">
+            <h-radio-group
+              v-model="productFormData.fundStatus"
+              @on-change="radioChange"
+            >
               <h-radio
                 v-for="(fundStatus,key) in productStatusOrm"
+                :key="key"
+                style="margin-right: 24px"
+                :label="key"
+              >
+                {{ fundStatus }}
+              </h-radio>
+            </h-radio-group>
+          </h-form-item>
+          <h-form-item
+            label="开放状态"
+            prop="dealStatus"
+            required
+          >
+            <h-radio-group v-model="productFormData.dealStatus">
+              <h-radio
+                v-for="(fundStatus,key) in productDealStatusOrm"
                 :key="key"
                 style="margin-right: 24px"
                 :label="key"
@@ -197,15 +222,17 @@
 
 <script>
 import core from "@hsui/core";
-import { PRODUCT_TYPE_ORM, PRODUCT_STATUS_ORM } from "../../constant";
+import { PRODUCT_TYPE_ORM, PRODUCT_STATUS_ORM, PRODUCT_DEAL_STATUS_ORM } from "../../constant";
 
 export default {
   data () {
     this.productTypeOrm = PRODUCT_TYPE_ORM;
     this.productStatusOrm = PRODUCT_STATUS_ORM;
+    this.productDealStatusOrm = PRODUCT_DEAL_STATUS_ORM;
     const router = this.$router;
     const that = this;
     return {
+      disabled: false,
       searchForm: {
         fundName: '',
         fundType: '',
@@ -223,7 +250,6 @@ export default {
       productFormData: {
         productName: '',
         productType: '',
-
       },
       productRuleValidate: {
         fundName: [
@@ -244,6 +270,13 @@ export default {
           {
             required: true,
             message: "请选择产品类型",
+            trigger: "change",
+          },
+        ],
+        dealStatus: [
+          {
+            required: true,
+            message: "请选择开放类型",
             trigger: "change",
           },
         ],
@@ -277,6 +310,13 @@ export default {
           key: "fundStatus",
           render: (h, { row: { fundStatus } }) => {
             return h("span", {}, this.productStatusOrm[fundStatus]);
+          },
+        },
+        {
+          title: "开放状态",
+          key: "dealStatus",
+          render: (h, { row: { dealStatus } }) => {
+            return h("span", {}, this.productDealStatusOrm[dealStatus]);
           },
         },
         {
@@ -332,6 +372,8 @@ export default {
     this.getProductList();
   },
   methods: {
+    radioChange (val) {
+    },
     handleReset () {
       this.searchForm = {};
     },
@@ -432,7 +474,7 @@ export default {
     productFormOk () {
       this.$refs["productForm"].validate((valid) => {
         if (valid) {
-          if (this.productFormData.id) {
+          if (this.productFormData.fundId) {
             this.updateProduct();
           } else {
             this.createProduct();
