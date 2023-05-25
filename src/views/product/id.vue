@@ -2,16 +2,10 @@
   <div class="product-detail">
     <h2>详情页</h2>
     <ul>
-      <li>产品名称：{{ data.productName }}</li>
+      <li>产品编号：{{ form.fundId }}</li>
       <li>
-        产品类型：{{ data.productType && productTypeOrm[data.productType] }}
+        产品名称：{{ form.fundName}}
       </li>
-      <li>
-        产品状态：{{
-          data.productStatus && productStatusOrm[data.productStatus]
-        }}
-      </li>
-      <li>产品大类：{{ data.productCategory }}</li>
     </ul>
     <div
       id="lineEchart"
@@ -29,22 +23,38 @@ export default {
     this.productTypeOrm = PRODUCT_TYPE_ORM;
     this.productStatusOrm = PRODUCT_STATUS_ORM;
     return {
-      data: {},
+      data: [],
+      form: {
+        fundId: '',
+        fundName: '',
+      }
     };
   },
   created () {
     const { params: { id } = {} } = this.$route;
+    if (id == '' || id == undefined) {
+      id = window.sessionStorage.getItem('fundId')
+    }
     core
       .fetch({
         method: "get",
-        url: `/api/product/${id}`,
+        url: '/purchase/liquidation/getNavListById',
+        data: {
+          fundId: id
+        }
       })
       .then((res) => {
-        this.data = {
-          ...this.data,
-          ...res.data,
-        };
-      });
+        if (res.code == '10000') {
+          this.data = res.data;
+          this.form = res.data[0];
+        }
+        else {
+          this.$hMessage.error(res.msg)
+        }
+      })
+      .catach(() => {
+        this.$hMessage.error('获取净值信息出错')
+      })
   },
   mounted () {
     this.drawLineEchart();
@@ -53,14 +63,24 @@ export default {
     drawLineEchart () {
       // 基于准备好的dom，初始化echarts实例
       const echart = this.$echarts.init(document.getElementById("lineEchart"));
-
+      let date = [];
+      let nav = [];
+      for (const item of this.data) {
+        date.push(item.date);
+      }
+      for (const item of this.data) {
+        nav.push(item.nav);
+      }
       // 指定图表的配置项和数据
       const option = {
+        title: {
+          text: '基金净值走势图'
+        },
         tooltip: {
           trigger: "axis",
         },
         legend: {
-          data: ["基金1", "基金2", "基金3", "基金4", "基金5"],
+          data: ["净值"],
         },
         grid: {
           left: "3%",
@@ -76,7 +96,7 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+          data: date,
         },
         yAxis: {
           type: "value",
@@ -86,31 +106,7 @@ export default {
             name: "基金1",
             type: "line",
             stack: "Total",
-            data: [120, 132, 101, 134, 90, 230, 210],
-          },
-          {
-            name: "基金2",
-            type: "line",
-            stack: "Total",
-            data: [220, 182, 191, 234, 290, 330, 310],
-          },
-          {
-            name: "基金3",
-            type: "line",
-            stack: "Total",
-            data: [150, 232, 201, 154, 190, 330, 410],
-          },
-          {
-            name: "基金4",
-            type: "line",
-            stack: "Total",
-            data: [320, 332, 301, 334, 390, 330, 320],
-          },
-          {
-            name: "基金5",
-            type: "line",
-            stack: "Total",
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            data: nav,
           },
         ],
       };
@@ -122,8 +118,10 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .product-detail {
+  background-color: #fff;
+  padding-left: 20px;
   h2 {
     font-size: 18px;
     margin-bottom: 24px;

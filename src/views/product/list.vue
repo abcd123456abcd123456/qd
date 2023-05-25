@@ -349,6 +349,7 @@ export default {
                   props: { type: "text", size: "small" },
                   on: {
                     click () {
+                      window.sessionStorage.setItem('fundId', fundId)
                       router.push({
                         name: 'product-id',
                         params: {
@@ -364,7 +365,11 @@ export default {
           },
         },
       ],
-      productList: [],
+      productList: [
+        {
+          index: '1',
+        }
+      ],
     };
   },
   created () {
