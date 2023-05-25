@@ -364,6 +364,10 @@ export default {
               total: res.data.length + page * 10
             }
           }
+          else {
+            this.$hMessage.info(res.msg)
+            this.data = [];
+          }
         });
 
     },
@@ -416,6 +420,10 @@ export default {
               current: 1,
               total: res.data.length + page * 10
             }
+          }
+          else {
+            this.$hMessage.info(res.msg)
+            this.data = [];
           }
         });
     }
