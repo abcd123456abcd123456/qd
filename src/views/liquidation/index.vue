@@ -98,7 +98,7 @@
       >
         <h-menu
           mode="horizontal"
-          :active-name="activeName"
+          active-name="subscribeColumns"
           class="menu"
           @on-select="change"
         >
@@ -117,6 +117,7 @@
             :columns="columns"
             :data="data"
             class="table"
+            stripe
           ></h-table>
           <h-button
             type="primary"
@@ -259,6 +260,7 @@ export default {
   },
   methods: {
     change (name) {
+      this.activeName = name;
       if (name == 'redemptionColumns') {
         core
           .fetch({
@@ -351,8 +353,8 @@ export default {
         })
     },
     timeOk () {
-      this.currrent += 1;
-      this.tabName = quotation
+      this.current += 1;
+      this.tabName = 'quotation'
     },
     quotation () {
       core
@@ -374,10 +376,11 @@ export default {
         })
     },
     quotationOk () {
-      this.currrent += 1;
-      this.tabName = calculateShare
+      this.current += 1;
+      this.tabName = 'calculateShare'
     },
     confirm () {
+      console.log(this.activeName);
       if (this.activeName == 'subscribeColumns') {
         core
           .fetch({

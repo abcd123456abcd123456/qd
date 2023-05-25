@@ -139,6 +139,7 @@ export default {
       this.week = item.week;
       this.time = item.time;
       console.log(item);
+      window.sessionStorage.setItem('date', this.getDate(item.date))
     })
   }
 };

@@ -81,6 +81,7 @@
         :columns="productColumns"
         :data="productList"
         class="table"
+        stripe
       ></h-table>
       <!-- 分页 -->
       <div
