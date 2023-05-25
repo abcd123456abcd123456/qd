@@ -278,6 +278,13 @@ export default {
     }
   },
   methods: {
+    format (dateTime) {
+      let datetime = new Date(dateTime);
+      const year = datetime.getFullYear();
+      const month = datetime.getMonth() + 1 < 10 ? `0${datetime.getMonth() + 1}` : datetime.getMonth() + 1;
+      const day = datetime.getDate() < 10 ? `0${datetime.getDate()}` : datetime.getDate()
+      return `${year}-${month}-${day} 00:00:00`
+    },
     handleReset (name) {
       this.searchForm = {};
       this.$refs[name].resetValidate();
@@ -324,10 +331,10 @@ export default {
         fundId = this.searchForm.fundId
       }
       if (this.searchForm.fromDate != '') {
-        queryDealStartTime = this.searchForm.fromDate
+        queryDealStartTime = this.format(this.searchForm.fromDate)
       }
       if (this.searchForm.endDate != '') {
-        queryDealEndTime = this.searchForm.endDate
+        queryDealEndTime = this.format(this.searchForm.endDate)
       }
       if (this.searchForm.dealType != '') {
         dealType = this.searchForm.dealType
@@ -377,10 +384,10 @@ export default {
         fundId = this.searchForm.fundId
       }
       if (this.searchForm.fromDate != '') {
-        queryDealStartTime = this.searchForm.fromDate
+        queryDealStartTime = this.format(this.searchForm.fromDate)
       }
       if (this.searchForm.endDate != '') {
-        queryDealEndTime = this.searchForm.endDate
+        queryDealEndTime = this.format(this.searchForm.endDate)
       }
       if (this.searchForm.dealType != '') {
         dealType = this.searchForm.dealType
