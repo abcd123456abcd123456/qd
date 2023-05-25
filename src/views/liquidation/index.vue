@@ -229,29 +229,6 @@ export default {
           title: "银行卡号",
           key: "bankCardNumber",
         },
-        {
-          title: "操作",
-          key: "action",
-          width: 200,
-          render (h) {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: { type: "text", size: "small" },
-                  on: {
-                    click () {
-                      that.productMsgBoxVisible = true;
-                      that.productFormMsgBoxData = { ...row };
-                      that.productFormData = { ...row };
-                    },
-                  },
-                },
-                "查看"
-              ),
-            ]);
-          },
-        },
       ],
     }
   },
@@ -261,7 +238,9 @@ export default {
   methods: {
     change (name) {
       this.activeName = name;
-      if (name == 'redemptionColumns') {
+    },
+    getData () {
+      if (this.activeName == 'redemptionColumns') {
         core
           .fetch({
             url: '/purchase/liquidation/getRedemptionMsg',
@@ -390,6 +369,7 @@ export default {
           .then((res) => {
             if (res.code == '10000') {
               this.$hMessage.success('确认成功')
+              this.getData();
             }
             else {
               this.$hMessage.error(res.msg)
@@ -408,6 +388,7 @@ export default {
           .then((res) => {
             if (res.code == '10000') {
               this.$hMessage.success('确认成功')
+              this.getData();
             }
             else {
               this.$hMessage.error(res.msg)

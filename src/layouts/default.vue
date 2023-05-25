@@ -70,7 +70,7 @@
                 产品赎回
               </h-menu-item>
               <h-menu-item name="/trade/business">
-                业务查询
+                历史交易查询
               </h-menu-item>
             </h-submenu>
             <h-menu-item name="/liquidation">
