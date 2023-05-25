@@ -123,7 +123,7 @@
             type="primary"
             class="button"
             @click="confirm"
-            :disabled="data.length"
+            :disabled="!data.length"
           >一键确认</h-button>
         </div>
       </h-tab-pane>

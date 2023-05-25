@@ -77,7 +77,7 @@
       </div>
       <!-- 表格 -->
       <h-table
-        :loading="productLoading"
+        :loading="false"
         :columns="productColumns"
         :data="productList"
         class="table"
@@ -100,7 +100,7 @@
         :escClose="true"
         :title="
         productFormMsgBoxData.id
-          ? `编辑${productFormMsgBoxData.productName}`
+          ? `编辑${productFormMsgBoxData.fundName}`
           : '新增'
       "
         :beforeEscClose="productMsgBoxBeforeEscClose"
@@ -130,12 +130,12 @@
           >
             <h-radio-group v-model="productFormData.fundType">
               <h-radio
-                v-for="(item,index) in productTypeOrm"
-                :key="index"
+                v-for="(fundType,key) in productTypeOrm"
+                :key="key"
                 style="margin-right: 24px"
-                :label="index"
+                :label="key"
               >
-                {{ item.value }}
+                {{ fundType }}
               </h-radio>
             </h-radio-group>
           </h-form-item>
@@ -156,12 +156,12 @@
           >
             <h-radio-group v-model="productFormData.fundStatus">
               <h-radio
-                v-for="(item,index) in productStatusOrm"
-                :key="index"
+                v-for="(fundStatus,key) in productStatusOrm"
+                :key="key"
                 style="margin-right: 24px"
-                :label="index"
+                :label="key"
               >
-                {{ item.value }}
+                {{ fundStatus }}
               </h-radio>
             </h-radio-group>
           </h-form-item>
@@ -264,6 +264,9 @@ export default {
         {
           title: "产品类型",
           key: "fundType",
+          render: (h, { row: { fundType } }) => {
+            return h("span", {}, this.productTypeOrm[fundType]);
+          },
         },
         {
           title: "产品风险等级",
@@ -272,6 +275,9 @@ export default {
         {
           title: "产品状态",
           key: "fundStatus",
+          render: (h, { row: { fundStatus } }) => {
+            return h("span", {}, this.productStatusOrm[fundStatus]);
+          },
         },
         {
           title: "发行公司",
@@ -318,11 +324,7 @@ export default {
           },
         },
       ],
-      productList: [
-        {
-          index: '1',
-        }
-      ],
+      productList: [],
     };
   },
   created () {

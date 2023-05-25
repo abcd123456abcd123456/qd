@@ -155,7 +155,6 @@
               prop="bankCardNumber"
             >
               <h-select
-                v-model="productForm.bankCardNumber"
                 style="width: 300px"
                 @on-change="bankCardChange"
                 widthAdaption

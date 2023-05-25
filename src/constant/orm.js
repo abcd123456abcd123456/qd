@@ -1,32 +1,17 @@
-export const PRODUCT_TYPE_ORM = [
-  {
-    value: '货币基金',
-  },
-  {
-    value: '债卷型基金',
-  },
-  {
-    value: '混合型基金',
-  },
-  {
-    value: '指数基金',
-  },
-  {
-    value: '股票型基金',
-  },
-  {
-    value: '特种基金',
-  },
-];
+export const PRODUCT_TYPE_ORM = {
+  '货币型': '货币型',
+  '债券型': '债卷型',
+  '混合型': '混合型',
+  '指数型': '指数型',
+  '股票型': '股票型',
+  '特种': '特种',
 
-export const PRODUCT_STATUS_ORM = [
-  {
-    value: '开放',
-  },
-  {
-    value: '关闭',
-  },
-];
+};
+
+export const PRODUCT_STATUS_ORM = {
+  '开放': '开放',
+  '关闭': '关闭',
+}
 
 
 export const user_state_orm = {
